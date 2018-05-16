@@ -3,37 +3,32 @@ from sklearn.datasets import load_iris
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
+class IrisClassifier(object):
+    def __init__(self):
+        self.iris = load_iris() # wczytywanie danych
+        self.names = self.iris.target_names
+        self.decision_tree = tree.DecisionTreeClassifier() # utworzenie klasyfikatora
+        # uczenie klasyfikatora przy uzyciu zbioru uczacego
+        self.decision_tree.fit(self.iris.data, self.iris.target)
 
-# wczytywanie danych 
-iris = load_iris()
+    def make_predictions(self, data):
+        # sprawdzenie dzialania klasyfikatora na zbiorze testowym
+        return self.decision_tree.predict(data)
 
-# tablica z danymi
-x = iris.data
+    def info(self):
+        print(self.iris.DESCR)
+        
 
-# etykiety (prawidlowe odpowiedzi)
-y = iris.target
+def main():
 
-# #getting label names i.e the three flower species
-y_names = iris.target_names
+    iris_classifier = IrisClassifier()
+    iris_classifier.info()
+    
+    # example
+    sample = [[6.9, 3.1, 4.9, 1.5]]
+    predictions = iris_classifier.make_predictions(sample)
+    predictions_as_names = iris_classifier.names[predictions]
+    print(predictions_as_names)
 
-# podzielenie danych na zbior uczacy i testowy
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.02)
-
-# utworzenie klasyfikatora
-decision_tree = tree.DecisionTreeClassifier()
-
-# uczenie klasyfikatora przy uzyciu zbioru uczacego
-decision_tree.fit(x_train, y_train)
-
-# sprawdzenie dzialania klasyfikatora na zbiorze testowym
-predictions = decision_tree.predict(x)
-
-print (iris.DESCR)
-print (y)
-print (predictions)
-
-#print (decision_tree.predict([x_train[0]]))
-#print (y_train[0])
-# na ile dokladny byl klasyfikator w przypadku zbioru testowego
-output = accuracy_score(y, predictions) * 100
-print(output)
+if __name__ == '__main__':
+    main()
